@@ -461,93 +461,124 @@ return 0;
 
 ```
 #include <stdio.h>
-# define max 6
-int queue[max]; // array declaration
-int front=-1;
-int rear=-1;
-// function to insert an element in a circular queue
-void enqueue(int element)
+#include <stdlib.h>
+#define MAX 10
+void create_queue();
+void insert_element(int);
+void delete_element(int);
+void check_priority(int);
+void display_priorityqueue();
+int pqueue[MAX];
+int front, rear;
+void main()
 {
-if(front==-1 && rear==-1) // condition to check queue is empty
+int n, choice;
+printf("\nEnter 1 to insert element by priority ");
+printf("\nEnter 2 to delete element by priority ");
+printf("\nEnter 3 to display priority queue ");
+printf("\nEnter 4 to exit");
+create_queue();
+while (1)
 {
-front=0;
-rear=0;
-queue[rear]=element;
-}
-else if((rear+1)%max==front) // condition to check queue is full
-{
-printf("Queue is overflow..");
-}
-else
-{
-rear=(rear+1)%max; // rear is incremented
-queue[rear]=element; // assigning a value to the queue at the rear position.
-}
-}
-
-// function to delete the element from the queue
-int dequeue()
-{
-if((front==-1) && (rear==-1)) // condition to check queue is empty
-{
-printf("\nQueue is underflow..");
-}
-else if(front==rear)
-{
-printf("\nThe dequeued element is %d", queue[front]);
-front=-1;
-rear=-1;
-}
-else
-{
-printf("\nThe dequeued element is %d", queue[front]);
-front=(front+1)%max;
-}
-}
-
-// function to display the elements of a queue
-void display()
-{
-int i=front;
-if(front==-1 && rear==-1)
-{
-printf("\n Queue is empty..");
-}
-else
-{
-printf("\nElements in a Queue are :");
-while(i<=rear)
-{
-printf("%d,", queue[i]);
-i=(i+1)%max;
-}
-}
-}
-int main()
-{
-int choice=1,x; // variables declaration
-while(choice<4 && choice!=0) // while loop
-{
-printf("\n Press 1: Insert an element");
-printf("\nPress 2: Delete an element");
-printf("\nPress 3: Display the element");
-printf("\nEnter your choice");
+printf("\nEnter your choice : ");
 scanf("%d", &choice);
 switch(choice)
 {
-case 1:
-printf("Enter the element which is to be inserted");
-scanf("%d", &x);
-enqueue(x);
+case 1: printf("\nEnter element to insert : ");
+scanf("%d",&n);
+insert_element(n);
 break;
-case 2:
-dequeue();
+case 2: printf("\nEnter element to delete : ");
+scanf("%d",&n);
+delete_element(n);
 break;
-case 3:
-display();
-}}
-return 0;
+case 3: display_priorityqueue();
+break;
+case 4: exit(0);
+default: printf("\n Please enter valid choice");
 }
+}
+}
+
+void create_queue()
+{
+front = rear = -1;
+}
+void insert_element(int data)
+{
+if (rear >= MAX - 1)
+{
+printf("\nQUEUE OVERFLOW");
+return;
+}
+if ((front == -1) && (rear == -1))
+{
+front++;
+rear++;
+pqueue[rear] = data;
+return;
+}
+else
+check_priority(data);
+rear++;
+}
+void check_priority(int data)
+{
+int i,j;
+for (i = 0; i <= rear; i++)
+{
+if (data >= pqueue[i])
+{
+for (j = rear + 1; j > i; j--)
+{
+pqueue[j] = pqueue[j - 1];
+}
+pqueue[i] = data;
+return;
+}
+}
+pqueue[i] = data;
+}
+
+void delete_element(int data)
+{
+int i;
+if ((front==-1) && (rear==-1))
+{
+printf("\nEmpty Queue");
+return;
+}
+for (i = 0; i <= rear; i++)
+{
+if (data == pqueue[i])
+{
+for (; i < rear; i++)
+{
+pqueue[i] = pqueue[i + 1];
+}
+pqueue[i] = -99;
+rear--;
+if (rear == -1)
+front = -1;
+return;
+}
+}
+printf("\n%d element not found in queue", data);
+}
+void display_priorityqueue()
+{
+if ((front == -1) && (rear == -1))
+{
+printf("\nEmpty Queue ");
+return;
+}
+for (; front <= rear; front++)
+{
+printf(" %d ", pqueue[front]);
+}
+front = 0;
+}
+
 ```
 
 
@@ -1036,6 +1067,5 @@ printf("%d ---> ",temp -> data);
 printf("%d ---> %d", temp -> data, head -> data);
 }
 }
-
 ```
 
